@@ -7,6 +7,20 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Insert title here</title>
+
+<style>
+
+table{
+
+	float:left;
+
+}
+
+#contenedorBoton{
+
+	margin-left:1000px;
+}
+</style>
 </head>
 
 <%
@@ -45,6 +59,13 @@ List<Productos> losProductos=(List<Productos>) request.getAttribute("LISTAPRODUC
 
 <%} %>
 </table>
+
+<div id="contenedorBoton">
+
+	<input type="button" value="Insertar Registro" onclick="window.location.href='inserta_producto.jsp' "/>
+	
+
+</div>
 
 </body>
 </html>

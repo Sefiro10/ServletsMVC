@@ -1,6 +1,7 @@
 package com.pildorasinformaticas.productos;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.*;
@@ -48,6 +49,48 @@ public class ModeloProductos {
 		}
 		return productos;
 		
+		
+	}
+	public void agregarElNuevoProducto(Productos nuevoProducto) {
+		// TODO Auto-generated method stub
+		
+		Connection miConexion=null;
+		
+		PreparedStatement miStatement=null;
+		
+		//Obtener la conexión 
+		
+		try {
+			
+			miConexion=origenDatos.getConnection();
+			
+		
+		
+		//Crear instrucción sql que inserte el producto
+		
+		String sql="INSERT INTO PRODUCTOS (CÓDIGOARTÍCULO, SECCIÓN, NOMBREARTÍCULO, PRECIO, FECHA, IMPORTADO, PAÍSDEORIGEN)"+
+		"VALUES(?,?,?,?,?,?,?)";
+		
+		miStatement=miConexion.prepareStatement(sql);
+		
+		//Establecer parametros para el producto
+		
+		miStatement.setString(1, nuevoProducto.getcArt());
+		miStatement.setString(2, nuevoProducto.getSeccion());
+		miStatement.setString(3, nuevoProducto.getnArt());
+		miStatement.setDouble(4, nuevoProducto.getPrecio());
+		java.util.Date utilDate=nuevoProducto.getFecha();
+		java.sql.Date fechaConvertida= new java.sql.Date(utilDate.getTime());		
+		miStatement.setDate(5, nuevoProducto.getFecha());
+		miStatement.setString(6, nuevoProducto.getImportado());
+		miStatement.setString(7, nuevoProducto.getpOrig());
+				
+		//Ejecutar la instrucción SQL
+		miStatement.execute();
+		}catch(Exception e) {
+			
+			
+		}
 		
 	}
 }
