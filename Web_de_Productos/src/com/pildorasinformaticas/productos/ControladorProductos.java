@@ -74,13 +74,111 @@ public class ControladorProductos extends HttpServlet {
 			
 			break;
 			
+		case "cargar":
+			
+			try {
+				cargaProductos(request, response);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			break;
+			
+		case "eliminar":
+			
+			eliminarProducto(request,response),
+			
+			break;
+			
 		default:
 			
 			obtenerProductos(request, response);
 			
+		case "actualizarBBDD":
+			
+			try {
+				actualizaProductos(request, response);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			break;		
+			
+			
 		}
 		
 	
+	}
+private void eliminarProducto(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		// TODO Auto-generated method stub
+		//Capturar el codigo del articulo
+	
+	String CodArticulo=request.getParameter("CArticulo");
+		//Borrar Producto de la BBDD
+	modeloProductos.eliminarProducto(CodArticulo);
+		//Volver a la lista de productos
+	}
+
+
+
+private void actualizaProductos(HttpServletRequest request, HttpServletResponse response) throws Exception{	
+		// TODO Auto-generated method stub
+	
+		//Leer los datos que le vienen del  formulario actualizar
+	
+	String CodArticulo=request.getParameter("CArt");
+	String Seccion=request.getParameter("seccion");
+	String NombreArticulo=request.getParameter("NArt");		
+	SimpleDateFormat formatoFecha=new SimpleDateFormat("yyyy-MM-dd");	
+	Date Fecha=null;		
+	try {
+		Fecha=formatoFecha.parse(request.getParameter("fecha"));
+	} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	double Precio=Double.parseDouble(request.getParameter("precio"));
+	String Importado=request.getParameter("importado");
+	String PaisOrigen=request.getParameter("POrig");
+	
+		//Crear un objeto de tipo producto con la info del formulario
+	
+	Productos ProductoActualizado=new Productos(CodArticulo,Seccion,NombreArticulo,Precio,Fecha,Importado,PaisOrigen);
+	
+		//Actualizar la BBDD con la info del obj producto
+	
+	modeloProductos.actualizarProducto(ProductoActualizado);
+	
+		//Volver al listado con la info actualizada
+		
+	}
+
+
+
+
+
+
+	private void cargaProductos(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		// TODO Auto-generated method stub
+		//Leer el codigo aritulo que viene del listado
+		
+		String codigoArticulo=request.getParameter("CArticulo");
+		
+		//Enviar C Articulo a modelo
+		
+		Productos elProducto=modeloProductos.getProducto(codigoArticulo);
+		
+		//Colocar atributo correspondiente al C Articulo
+		
+		request.setAttribute("ProductoActualizar", elProducto);
+		
+		//Enviar prududcto al formulario de actualizar
+		
+		RequestDispatcher dispatcher=request.getRequestDispatcher("/actualizar.jsp"); 
+		
+		dispatcher.forward(request, response);
 	}
 
 
@@ -116,6 +214,8 @@ public class ControladorProductos extends HttpServlet {
 		//Volver a listar la tabla de Productos
 		obtenerProductos(request, response);
 		
+		
+		
 	}
 
 
@@ -126,7 +226,9 @@ public class ControladorProductos extends HttpServlet {
 		
 		List<Productos> productos;
 		try {
-			productos=modeloProductos.getProductos();
+			productos=modeloProductos.getProductos();	
+			
+			
 			
 		//----------Agregar lista de productos al request----------
 			request.setAttribute("LISTAPRODUCTOS", productos);
